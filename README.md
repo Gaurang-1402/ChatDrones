@@ -1,18 +1,35 @@
 # ChatDrones: Control Drones with Natural Language
 
-ChatDrones showcases the power of Language Logic Models (LLMs) by allowing users to control drones using simple, natural language instructions. The system currently operates within a simulated environment for testing and development purposes.
+ChatDrones is a project that integrates Language Logic Models (LLMs) with drone control. This setup allows users to **command drones using simple, everyday language.** The project uses the ROS2 (Robot Operating System) Humble and runs simulations in the Gazebo environment, providing a reliable platform for drone behavior.
+
+ChatDrones also includes a web application with a user-friendly interface, making it easy for users to input commands. This combines the benefits of advanced technology with a simple and easy-to-use design.
+
+Currently, ChatDrones operates within a simulated environment, serving as a practical platform for testing and development. However, it's also designed to work with real drones, translating natural language instructions into actual drone commands.
 
 Key features include:
 
 - A user-friendly web application that provides an interactive interface for drone control
 - Ability to initiate drone landing and takeoff through simple natural language commands
+[![output-onlinegiftools-14-1.gif](https://i.postimg.cc/rsQSKyS4/output-onlinegiftools-14-1.gif)](https://postimg.cc/hQQJYBZ4)
 - Full control over the drone's directional movement, including forward, backward, left, and right commands
+[![output-onlinegiftools-16-1.gif](https://i.postimg.cc/KjHR61P0/output-onlinegiftools-16-1.gif)](https://postimg.cc/64CWR51Z)
 - Support for commands in multiple languages
+
+[![output-onlinegiftools-17-1.gif](https://i.postimg.cc/qvXpntNW/output-onlinegiftools-17-1.gif)](https://postimg.cc/mPkxWgNS)
+
 
 
 ## ROSGPT Architecture
 
 ![Screenshot from 2023-07-04 20-49-50](https://github.com/Gaurang-1402/ChatDrones/assets/71042887/f3534fd5-1ac8-4d55-8e67-fb5f6c0ddf8d)
+
+1. The first component, "rosgpt.py", serves as the primary translator. As a REST server in a ROS2 node, it receives instructions in the form of POST requests, then processes these instructions into structured JSON commands using the ChatGPT API. Once the translation is complete, the commands are published on the /voice_cmd topic, ready for the next stage.
+
+2. The next component is "rosgpt_client_node.py", a ROS2 client node that acts as a liaison between the user and rosgpt.py. It sends POST requests with the user's commands to the ROSGPT REST server and awaits the transformed JSON commands, displaying them upon receipt.
+
+3. Another key component is "rosgpt_client.py", which fulfills a similar role to rosgpt_client_node.py. The main difference is that this script functions solely as a REST client for ROSGPT, without the ROS2 node involvement.
+
+4. Once the commands are translated, they are received by "rosgptparser_drone.py". This script, dubbed the ROSGPTParser, executes the commands. It subscribes to the /voice_cmd topic, receives the JSON commands, parses them, and then carries out the necessary drone maneuvers.
 
 
 ## Getting started
